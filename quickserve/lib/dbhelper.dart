@@ -17,6 +17,7 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'food_ordering.db');
+    print('Database path: $path'); // Debug: print the database path
     return await openDatabase(
       path,
       version: 1,
@@ -42,7 +43,7 @@ class DatabaseHelper {
       )
     ''');
 
-    // Insert 20 food items
+    // Insert food items
     await db.insert('food_items', {'name': 'Pizza', 'cost': 10.0});
     await db.insert('food_items', {'name': 'Burger', 'cost': 8.0});
     await db.insert('food_items', {'name': 'Pasta', 'cost': 12.0});
@@ -63,15 +64,18 @@ class DatabaseHelper {
     await db.insert('food_items', {'name': 'Quesadilla', 'cost': 10.0});
     await db.insert('food_items', {'name': 'Dim Sum', 'cost': 15.0});
     await db.insert('food_items', {'name': 'Burrito', 'cost': 11.0});
+    
+    print('Inserted food items'); // Debug: confirm food items insertion
   }
 
   Future<List<Map<String, dynamic>>> getFoodItems() async {
     final db = await database;
-    return await db.query('food_items');
+    var result = await db.query('food_items', orderBy: 'id'); // Ensure order by ID
+    print('Fetched ${result.length} food items'); // Debug: print the number of food items
+    return result;
   }
 
-  Future<void> addOrderPlan(
-      String date, double targetCost, String selectedItems) async {
+  Future<void> addOrderPlan(String date, double targetCost, String selectedItems) async {
     final db = await database;
     await db.insert('order_plans', {
       'date': date,

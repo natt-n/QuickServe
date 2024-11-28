@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchFoodItems() async {
     final items = await dbHelper.getFoodItems();
+    print('Fetched ${items.length} food items'); // Debug: print the number of food items
     setState(() {
       foodItems = items;
     });
